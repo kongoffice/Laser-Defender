@@ -55,25 +55,30 @@ public class Shooter : MonoBehaviour
     {
         while (true)
         {
-            GameObject instance = Instantiate(projectilePrefab,
-                                            transform.position,
-                                            Quaternion.identity);
-
-            Rigidbody2D rb = instance.GetComponent<Rigidbody2D>();
-            if (rb != null)
-            {
-                rb.velocity = transform.up * projectileSpeed;
-            }
-
-            Destroy(instance, projectileLifetime);
+            FireOne();
 
             float timeToNextProjectile = Random.Range(baseFiringRate - firingRateVariance,
-                                                        baseFiringRate + firingRateVariance);
+                                                    baseFiringRate + firingRateVariance);
             timeToNextProjectile = Mathf.Clamp(timeToNextProjectile, miniumFiringRate, float.MaxValue);
-
-            audioPlayer.PlayShootingClip();
 
             yield return new WaitForSeconds(timeToNextProjectile);
         }
+    }
+
+    public void FireOne()
+    {
+        GameObject instance = Instantiate(projectilePrefab,
+                                            transform.position,
+                                            Quaternion.identity);
+
+        Rigidbody2D rb = instance.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            rb.velocity = transform.up * projectileSpeed;
+        }
+
+        Destroy(instance, projectileLifetime);        
+
+        audioPlayer.PlayShootingClip();
     }
 }

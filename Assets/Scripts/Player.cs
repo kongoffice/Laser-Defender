@@ -5,7 +5,8 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     [SerializeField] float moveSpeed = 5f;
-    Vector2 rawInput;
+    //Vector2 rawInput;
+    [SerializeField] Joystick joystick;
 
     [SerializeField] float paddingLeft;
     [SerializeField] float paddingRight;
@@ -24,7 +25,9 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        InitBounds();    
+        InitBounds();
+
+        InvokeRepeating("Fire", 0, 0.25f);
     }
     void Update()
     {
@@ -39,6 +42,7 @@ public class Player : MonoBehaviour
     }
     private void Move()
     {
+        var rawInput = joystick.Direction;
         Vector3 delta = rawInput * moveSpeed * Time.deltaTime;
         Vector2 newPos = new Vector2();
         newPos.x = Mathf.Clamp(transform.position.x + delta.x, minBounds.x + paddingLeft, maxBounds.x - paddingRight);
@@ -46,9 +50,14 @@ public class Player : MonoBehaviour
         transform.position = newPos;
     }
 
-    void OnMove(InputValue value)
+    //void OnMove(InputValue value)
+    //{
+    //    rawInput = value.Get<Vector2>();
+    //}
+
+    private void Fire()
     {
-        rawInput = value.Get<Vector2>();
+        shooter.FireOne();
     }
 
     void OnFire(InputValue value)
